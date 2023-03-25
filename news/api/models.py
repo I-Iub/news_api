@@ -15,7 +15,7 @@ class News(models.Model):
         User, on_delete=models.SET_NULL, null=True,
         related_name='news', verbose_name='Автор'
     )
-    likes = models.IntegerField('Количество лайков')
+    likes = models.IntegerField('Количество лайков', default=0)
     published = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
