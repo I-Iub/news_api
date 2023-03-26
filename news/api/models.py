@@ -19,11 +19,6 @@ class News(models.Model):
     published = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['author', 'title'],
-                name='unique author news')
-        ]
         ordering = ['-published']
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
