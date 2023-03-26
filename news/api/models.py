@@ -30,7 +30,7 @@ class News(models.Model):
 class Comment(models.Model):
     text = models.TextField('Текст', max_length=4096)
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments',
+        User, on_delete=models.DO_NOTHING, related_name='comments',
         verbose_name='Автор'
     )
     news = models.ForeignKey(
@@ -46,3 +46,23 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment {self.pk} {self.author}:{self.text[:15]}'
+
+
+class Like(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, related_name='liked_news',
+        verbose_name='Лайки', db_index=True,
+    )
+    news = models.ForeignKey(
+        News, on_delete=models.CASCADE, related_name='liked_users',
+        verbose_name='Лайки', db_index=True,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'news'],
+                name='unique likes')
+        ]
+        verbose_name = 'Лайк'
+        verbose_name_plural = 'Лайки'
