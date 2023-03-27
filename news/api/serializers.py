@@ -23,12 +23,12 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class NewsSerializer(serializers.ModelSerializer):
-    likes = serializers.IntegerField(read_only=True)
-    published = serializers.DateTimeField(read_only=True)
+    num_comments = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = News
-        fields = ('pk', 'title', 'text', 'author', 'likes', 'published')
+        fields = ('pk', 'title', 'text', 'author', 'likes', 'published',
+                  'num_comments')
         read_only_fields = ['author', 'likes', 'published']
 
     def validate_title(self, title):
