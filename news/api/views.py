@@ -26,7 +26,6 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
 
 class NewsViewSet(viewsets.ModelViewSet):
-    # queryset = News.objects.all()
     queryset = News.objects.annotate(num_comments=Count('comments')).all()
     serializer_class = NewsSerializer
     permission_classes = (AuthorOrReadOnly | IsAdminUser,)
