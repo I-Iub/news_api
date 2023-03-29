@@ -1,11 +1,6 @@
 import os
-<<<<<<< HEAD
-from pathlib import Path
-
-=======
 from datetime import timedelta
 from pathlib import Path
->>>>>>> dev
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,11 +12,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
-ALLOWED_HOSTS = []
-=======
 ALLOWED_HOSTS = ['*']
->>>>>>> dev
 
 AUTH_USER_MODEL = 'api.User'
 
@@ -34,10 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api.apps.ApiConfig',
-<<<<<<< HEAD
-=======
     'drf_yasg',
->>>>>>> dev
 ]
 
 MIDDLEWARE = [
@@ -72,17 +60,12 @@ WSGI_APPLICATION = 'news.wsgi.application'
 
 DATABASES = {
     'default': {
-<<<<<<< HEAD
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-=======
         'ENGINE': os.getenv('DB_ENGINE'),
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT')
->>>>>>> dev
     }
 }
 
@@ -110,10 +93,6 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-<<<<<<< HEAD
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-=======
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -145,4 +124,3 @@ SWAGGER_SETTINGS = {
 }
 
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1']
->>>>>>> dev

@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-from django.shortcuts import render
-
-# Create your views here.
-=======
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
@@ -31,7 +26,6 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
 
 class NewsViewSet(viewsets.ModelViewSet):
-    # queryset = News.objects.all()
     queryset = News.objects.annotate(num_comments=Count('comments')).all()
     serializer_class = NewsSerializer
     permission_classes = (AuthorOrReadOnly | IsAdminUser,)
@@ -71,4 +65,3 @@ def delete_user(request):
     except User.DoesNotExists:
         pass
     return Response(status=status.HTTP_204_NO_CONTENT)
->>>>>>> dev
