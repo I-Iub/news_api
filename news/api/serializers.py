@@ -43,7 +43,9 @@ class NewsSerializer(serializers.ModelSerializer):
                 'В объекте запроса `request` должен быть указан пользователь '
                 '`user`'
             )
-        if News.objects.filter(
+
+        is_post_method = self.context.get('request').method.lower() == 'post'
+        if is_post_method and News.objects.filter(
                 title=title,
                 author=user,
                 published__gt=(now - delta)).exists():

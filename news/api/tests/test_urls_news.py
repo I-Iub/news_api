@@ -98,6 +98,16 @@ class TestPostNews:
         response = authorized_client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
 
+    def test_authorized_client_post_news_duplicate(
+            self, authorized_client
+    ):
+        data = dict(title='test_title', text='test_news')
+        duplicate = dict(title='test_title', text='another_text')
+        response = authorized_client.post(url, data)
+        assert response.status_code == status.HTTP_201_CREATED
+        response = authorized_client.post(url, duplicate)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
     def test_response_item(self, authorized_client, user):
         data = dict(title='test_title', text='test_news')
         response = authorized_client.post(url, data)
