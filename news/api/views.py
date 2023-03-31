@@ -79,6 +79,7 @@ class NewsViewSet(viewsets.ModelViewSet):
         except IntegrityError:
             return Response(status=status.HTTP_304_NOT_MODIFIED)
         news.likes += 1
+        news.save()
         return Response(status=status.HTTP_201_CREATED)
 
     @action(url_path='comments', url_name='comments', detail=True,
