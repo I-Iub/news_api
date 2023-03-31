@@ -3,6 +3,7 @@ import datetime
 from rest_framework import status
 
 url = '/api/v1/news/'
+url_template = url + '%(news_id)s/comments/'
 
 
 class TestGetNews:
@@ -204,3 +205,62 @@ class TestPostLike:
         like_url = url + f'{create_news.id}/like/'
         response = authorized_client.post(like_url)
         assert response.status_code == status.HTTP_201_CREATED
+
+
+class TestGetComments:
+    def test_unauthorized_client_get_comments(
+            self, unauthorized_client, create_news
+    ):
+        comments_url = url_template % {'news_id': create_news.id}
+        response = unauthorized_client.get(comments_url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_admin_client_get_comments(self, admin_client, create_news):
+        comments_url = url_template % {'news_id': create_news.id}
+        response = admin_client.get(comments_url)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_authorized_client_get_comments(
+            self, authorized_client, create_comment, create_news
+    ):
+        comments_url = url_template % {'news_id': create_news.id}
+        response = authorized_client.get(comments_url)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_author_client_get_comments(
+            self, author_client, create_comment, create_news
+    ):
+        comments_url = url_template % {'news_id': create_news.id}
+        response = author_client.get(comments_url)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_response_items(
+            self, authorized_client, create_comment, create_news
+    ):
+        comments_url = url_template % {'news_id': create_news.id}
+        response = authorized_client.get(comments_url)
+        comment_items = response.json().get('results')
+        assert isinstance(comment_items, list)
+        assert len(comment_items) == 1
+
+    def test_comments_list_fields(
+            self, authorized_client, create_comment, create_news
+    ):
+        comments_url = url_template % {'news_id': create_news.id}
+        response = authorized_client.get(comments_url)
+        comment_item = response.json().get('results')[0]
+        assert 'pk' in comment_item
+        assert 'text' in comment_item
+        assert 'author' in comment_item
+        assert 'news' in comment_item
+        assert 'published' in comment_item
+
+    def test_created_comment_returns_in_response(
+            self, authorized_client, create_comment, create_news
+    ):
+        comments_url = url_template % {'news_id': create_news.id}
+        response = authorized_client.get(comments_url)
+        comment_item = response.json().get('results')[0]
+        assert comment_item.get('pk') == create_comment.id
+        assert comment_item.get('text') == 'test_comment'
+        assert comment_item.get('news') == create_news.id
