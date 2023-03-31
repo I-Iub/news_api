@@ -13,10 +13,12 @@ git clone https://github.com/I-Iub/news_api.git
 
 Перейдите в папку с проектом. Создайте файл `.env`. Запишите в файл `.env` 
 переменные по примеру в файле [.env.example](https://github.com/I-Iub/news_api/blob/main/.env.example).
+
 Если проект разворачивается на удалённом сервере, а не локально, то в файле 
-`news/news/settings.py` в переменной `CSRF_TRUSTED_ORIGINS` укажите доменное 
-имя или IP хоста.
+`news/news/settings.py` в переменных `CSRF_TRUSTED_ORIGINS` и `ALLOWED_HOSTS` 
+укажите доменное имя или IP хоста.
 ```
+ALLOWED_HOSTS = ['<домен или IP>']
 CSRF_TRUSTED_ORIGINS = ['http://<домен или IP>']
 ```
 
