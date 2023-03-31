@@ -5,6 +5,7 @@ from django.db.models import Count
 from django.http import Http404
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
@@ -18,8 +19,8 @@ from .utils import get_news_object
 User = get_user_model()
 
 
-class CommentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
-                     mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class CommentViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                     viewsets.GenericViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (AuthorOrReadOnly | IsAdminUser,)
@@ -79,6 +80,26 @@ class NewsViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_304_NOT_MODIFIED)
         news.likes += 1
         return Response(status=status.HTTP_201_CREATED)
+
+    @action(url_path='comments', url_name='comments', detail=True,
+            methods=['get'], pagination_class=LimitOffsetPagination,
+            serializer_class=CommentSerializer,
+            permission_classes=[IsAuthenticated])
+    def list_comments(self, request, pk):
+        try:
+            News.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            raise Http404
+
+        comments = Comment.objects.filter(news_id=pk)
+        page = self.paginate_queryset(comments)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            response = self.get_paginated_response(serializer.data)
+            return response
+
+        serializer = self.get_serializer(comments, many=True)
+        return Response(serializer.data)
 
 
 class CreateUserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
