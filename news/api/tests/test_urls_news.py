@@ -216,6 +216,14 @@ class TestPostLike:
         response = authorized_client.post(like_url)
         assert response.status_code == status.HTTP_201_CREATED
 
+    def test_author_client_post_like_own_news(
+            self, create_news, author_client
+    ):
+        like_url = url + f'{create_news.id}/like/'
+        response = author_client.post(like_url)
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.data == {'error': 'Нельзя лайкать свою новость'}
+
 
 class TestGetComments:
     def test_unauthorized_client_get_comments(
