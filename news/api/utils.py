@@ -15,7 +15,7 @@ def get_news_list(limit=10, offset=0):
         news.author_id, com.id, com.text, com.published, com.author_id,
         com.count from news
             left join lateral (
-                select *, count(*) OVER (PARTITION BY news_id) 
+                select *, count(*) OVER (PARTITION BY news_id)
                 from api_comment as comment
                 where comment.news_id = news.id
                 order by comment.published desc
@@ -35,12 +35,12 @@ def get_news_object(obj_pk):
         news.author_id, com.id, com.text, com.published, com.author_id,
         com.count from api_news news
             left join lateral (
-                select *, count(*) OVER (PARTITION BY news_id) 
+                select *, count(*) OVER (PARTITION BY news_id)
                 from api_comment as comment
                 where comment.news_id = news.id
                 order by comment.published desc
                 limit 10
-                ) as com on true 
+                ) as com on true
         where news.id = %(pk)s
     """ % {'pk': obj_pk}
     with connection.cursor() as cursor:
