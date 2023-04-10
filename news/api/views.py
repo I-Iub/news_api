@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models import Count
 from django.http import Http404
 from rest_framework import mixins, status, viewsets
@@ -68,6 +68,7 @@ class NewsViewSet(viewsets.ModelViewSet):
 
     @action(url_path='like', url_name='like', detail=True, methods=['post'],
             permission_classes=[IsAuthenticated])
+    @transaction.atomic
     def like(self, request, pk):
         try:
             news = News.objects.get(pk=pk)
