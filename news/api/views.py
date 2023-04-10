@@ -73,6 +73,13 @@ class NewsViewSet(viewsets.ModelViewSet):
             news = News.objects.get(pk=pk)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if news.author == request.user:
+            return Response(
+                {'error': 'Нельзя лайкать свою новость'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         try:
             like = Like.objects.create(user=request.user, news=news)
             like.save()
